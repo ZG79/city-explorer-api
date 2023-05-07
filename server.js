@@ -14,14 +14,19 @@ app.get('/', (req,res)=>(
   res.status(200).send('Default route is working')
 ));
 //http://localhost:3001/weatherData
-app.get('/weatherData',(req,res)=>{
-  const {searchQuery} = req.query;
-  const cityData = weatherData.find(city=>city.city_name===searchQuery)
-  const formattedData = cityData.data.map(obj=>{
-    return new Forecast(obj);
-  });
+app.get('/weatherData',(req,res, next)=>{
 
-  res.status(200).send(formattedData);
+  try{
+    const {searchQuery} = req.query;
+    const cityData = weatherData.find(city=>city.city_name===searchQuery);
+    const formattedData = cityData.data.map(obj=>{
+      return new Forecast(obj);
+    });
+
+    res.status(200).send(formattedData);
+  } catch (error){
+    next(error);
+  }
   // if (searchQuery === 'Seattle'){
   //   const formattedData = weatherData[0].data.map(obj=>{
   //     return new Forecast(obj);
@@ -43,4 +48,13 @@ class Forecast {
     this.description=obj.weather.description;
   }
 }
+
+app.get('*',(req,res)=>{
+  res.status(404).send('Something went wrong');
+});
+
+app.use((error,req,res,next)=>{
+  res.status(500).send(error.message);
+});
+
 app.listen(PORT, ()=>console.log(`listening on ${PORT}`));

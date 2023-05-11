@@ -15,7 +15,7 @@ app.get("/", (req, res) => res.status(200).send("Default route is working"));
 
 app.get('/weather', getWeather);
 
-async function getWeather(req, res) {
+async function getWeather(req, res, next) {
   try {
     const { lat, lon } = req.query;
     const urlApi = `http://api.weatherbit.io/v2.0/forecast/daily/?lat=${lat}&key=${process.env.WEATHER_API_KEY}&lon=${lon}`;
@@ -37,6 +37,28 @@ class MyWeather {
     this.highTemp = weatherObj.high_temp;
   }
 }
+
+app.get('/movie', getMovie);
+
+async function getMovie (req,res){
+  const {query} = req.query;
+  const movieApi = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
+  const movieResponse = await axios.get(movieApi);
+  let formatted = movieResponse.data.results.map(element=> new MyMovie (element));
+  res.status(200).send(formatted);
+}
+
+class MyMovie {
+  constructor(movieObj){
+    this.name = movieObj.original_title;
+    this.overview = movieObj.overview;
+    this.popularity = movieObj.popularity;
+    this.release_date = movieObj.release_date;
+  }
+}
+
+
+
 
 //http://localhost:3001/weatherData
 // app.get("/weatherData", (req, res, next) => {

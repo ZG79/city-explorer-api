@@ -3,7 +3,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const weatherData = require("./data.json");
+// const weatherData = require("./data.json");
 const axios = require("axios");
 
 //initialize express
@@ -18,7 +18,7 @@ app.get('/weather', getWeather);
 async function getWeather(req, res, next) {
   try {
     const { lat, lon } = req.query;
-    const urlApi = `http://api.weatherbit.io/v2.0/forecast/daily/?lat=${lat}&key=${process.env.WEATHER_API_KEY}&lon=${lon}`;
+    const urlApi = `http://api.weatherbit.io/v2.0/forecast/daily/?lat=${lat}&key=${process.env.WEATHER_API_KEY}&lon=${lon}&days=5`;
     const apiResponse = await axios.get(urlApi);
     const format = apiResponse.data.data.map(
       (element) => new MyWeather(element)
@@ -44,7 +44,7 @@ async function getMovie (req,res){
   const {query} = req.query;
   const movieApi = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
   const movieResponse = await axios.get(movieApi);
-  let formatted = movieResponse.data.results.map(element=> new MyMovie (element));
+  let formatted = movieResponse.data.results.map(element=> new MyMovie (element)).slice(0,5);
   res.status(200).send(formatted);
 }
 

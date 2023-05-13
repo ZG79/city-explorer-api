@@ -6,7 +6,7 @@ const cors = require('cors');
 // const weatherData = require("./data.json");
 const axios = require('axios');
 const getWeather = require('./modules/weather');
-
+const getMovie = require('./modules/movies')
 //initialize express
 const app = express();
 //middleware to allow open access with cors. It will be executed for each incoming request to the application

@@ -1,21 +1,22 @@
-"use strict";
+'use strict';
 //this package reads env files,config methos is to process the file and adds them to the process.evc obj
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
 // const weatherData = require("./data.json");
-const axios = require("axios");
+const axios = require('axios');
+const getWeather = require('./modules/weather');
 
 //initialize express
 const app = express();
 //middleware to allow open access with cors. It will be executed for each incoming request to the application
 app.use(cors());
 const PORT = process.env.PORT;
-app.get('/', (req, res) => res.status(200).send("Default route is working"));
+
+//check if the server is working
+app.get('/', (req, res) => res.status(200).send('Default route is working'));
 
 app.get('/weather', getWeather);
-
-const getWeather = require('./modules/weather');
 
 // async function getWeather(req, res, next) {
 //   try {
@@ -85,11 +86,11 @@ class MyMovie {
 //   }
 // }
 
-app.get("*", (req, res) => {
-  res.status(404).send("Something went wrong");
+app.get('*', (req, res) => {
+  res.status(404).send('Something went wrong');
 });
 
-app.use((error, req, res, next) => {
+app.use((error, req, res) => {
   res.status(500).send(error.message);
 });
 

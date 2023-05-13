@@ -1,20 +1,15 @@
-'use strict'
+'use strict';
 
 const axios = require('axios');
 
-async function getWeather(req, res, next) {
-  try {
-    const { lat, lon } = req.query;
-    const urlApi = `http://api.weatherbit.io/v2.0/forecast/daily/?lat=${lat}&key=${process.env.WEATHER_API_KEY}&lon=${lon}&days=5`;
-    const apiResponse = await axios.get(urlApi);
-    const format = apiResponse.data.data.map(
-      (element) => new MyWeather(element)
+function getWeather(req, res, next) {
+  const { lat, lon } = req.query;
+  const urlApi = `http://api.weatherbit.io/v2.0/forecast/daily/?lat=${lat}&key=${process.env.WEATHER_API_KEY}&lon=${lon}&days=5`;
+  axios.get(urlApi)
+    .then(response=>response.data.data.map(element => new MyWeather(element))
+      .then(format => res.status(200).send(format))
+      .catch(err=>next(err))
     );
-    console.log(apiResponse.data);
-    res.status(200).send(format);
-  } catch (error) {
-    next(error);
-  }
 }
 
 class MyWeather {
@@ -25,4 +20,4 @@ class MyWeather {
   }
 }
 
-module.export = getWeather;
+module.exports = getWeather;

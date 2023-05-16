@@ -4,9 +4,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 // const weatherData = require("./data.json");
-const axios = require('axios');
+
 const getWeather = require('./modules/weather');
-const getMovie = require('./modules/movies')
+const getMovie = require('./modules/movies');
 //initialize express
 const app = express();
 //middleware to allow open access with cors. It will be executed for each incoming request to the application
@@ -43,22 +43,22 @@ app.get('/weather', getWeather);
 
 app.get('/movie', getMovie);
 
-async function getMovie (req,res){
-  const {query} = req.query;
-  const movieApi = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
-  const movieResponse = await axios.get(movieApi);
-  let formatted = movieResponse.data.results.map(element=> new MyMovie (element)).slice(0,5);
-  res.status(200).send(formatted);
-}
+//  function getMovie (req,res){
+//   const {query} = req.query;
+//   const movieApi = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
+//   const movieResponse = await axios.get(movieApi);
+//   let formatted = movieResponse.data.results.map(element=> new MyMovie (element)).slice(0,5);
+//   res.status(200).send(formatted);
+// }
 
-class MyMovie {
-  constructor(movieObj){
-    this.name = movieObj.original_title;
-    this.overview = movieObj.overview;
-    this.popularity = movieObj.popularity;
-    this.release_date = movieObj.release_date;
-  }
-}
+// class MyMovie {
+//   constructor(movieObj){
+//     this.name = movieObj.original_title;
+//     this.overview = movieObj.overview;
+//     this.popularity = movieObj.popularity;
+//     this.release_date = movieObj.release_date;
+//   }
+// }
 
 
 

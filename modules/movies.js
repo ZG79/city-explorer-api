@@ -7,7 +7,7 @@ function getMovie (req,res,next){
   const movieApi = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
   axios.get(movieApi)
     .then(response => {
-      const movies = response.data.results.filter(element=>element.popularity > 8);
+      const movies = response.data.results.filter(element=>element.popularity > 8&&(element.poster_path));
       console.log(movies);
       return movies;
     })
@@ -22,6 +22,7 @@ class MyMovie {
     this.overview = movieObj.overview;
     this.popularity = movieObj.popularity;
     this.release_date = movieObj.release_date;
+    this.poster = movieObj.poster_path;
   }
 }
 

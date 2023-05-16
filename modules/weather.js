@@ -16,6 +16,7 @@ class MyWeather {
     this.date = weatherObj.valid_date;
     this.description = weatherObj.weather.description;
     this.highTemp = weatherObj.high_temp;
+    this.icon = weatherObj.weather.icon;
   }
 }
 

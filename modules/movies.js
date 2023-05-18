@@ -1,6 +1,7 @@
 'use strict';
 
 const axios = require('axios');
+let cache = require('./cache');
 
 function getMovie (req,res,next){
   const {query} = req.query;

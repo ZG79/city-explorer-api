@@ -1,7 +1,7 @@
 "use strict";
 
-const axios = require("axios");
-let cache = require("./cache");
+const axios = require('axios');
+let cache = require('./cache');
 
 async function getMovie(req, res, next) {
   const { query } = req.query;
@@ -18,8 +18,8 @@ async function getMovie(req, res, next) {
       .get(movieApi)
       .then((response) => {
         const movies = response.data.results.filter(
-          (element) => element.popularity > 8 && element.poster_path
-        ).then(movies=>movies.map(element=>new MyMovie(element)).slice(0,5));
+          (element) => element.popularity > 8 && element.poster
+        ).then(movies=>movies.map(element=>new MyMovie(element)));
         cache[key] = {};
         cache[key].timestamp = Date.now();
         cache[key].data = movies;

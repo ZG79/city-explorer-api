@@ -1,14 +1,13 @@
-"use strict";
+'use strict';
 
-const axios = require("axios");
-let cache = require("./cache");
+const axios = require('axios');
+let cache = require('./cache');
 
 async function getMovie(req, res, next) {
   const { query } = req.query;
-  // console.log('query===', query);
   const key = 'movie-' + query;
-  // console.log('key====', key);
   const movieApi = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
+
   if (cache[key] && Date.now() - cache[key].timestamp < 50000) {
     console.log('Cache hit');
     res.status(200).send(cache[key].data);
@@ -17,12 +16,15 @@ async function getMovie(req, res, next) {
     axios
       .get(movieApi)
       .then((response) => {
-        const movies = response.data.results.filter(
-          (element) => element.popularity > 8 && element.poster_path
-        ).then(movies=>movies.map(element=>new MyMovie(element)).slice(0,5));
-        cache[key] = {};
-        cache[key].timestamp = Date.now();
-        cache[key].data = movies;
+        const movies = response.data.results
+          .filter((element) => element.popularity > 8 && element.poster_path)
+          .map((element) => new MyMovie(element));
+
+        cache[key] = {
+          timestamp: Date.now(),
+          data: movies,
+        };
+
         res.status(200).send(movies);
       })
       .catch((err) => next(err));

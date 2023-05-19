@@ -6,36 +6,20 @@ let cache = require("./cache");
 async function getMovie(req, res, next) {
   const { query } = req.query;
   // console.log('query===', query);
-  const key = "movie-" + query;
+  const key = 'movie-' + query;
   // console.log('key====', key);
   const movieApi = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
-
-  //   console.log('Cache miss');
-  //   cache[key]={};
-  //   cache[key].timestamp=Date.now();
-  //   let result = await axios.get(movieApi);
-  //   console.log(result.data.results);
-
-  //   try {
-  //     cache[key].data = result.data.results.filter(element=>element.popularity > 8 && (element.poster_path));
-  //     let movieData = cache[key].data;
-
-  //     let dataToSend = movieData.map(element => new MyMovie(element)).slice(0,5);
-  //     res.status(200).send(dataToSend);
-  //   } catch (err) {
-  //     next(err);
-  //   }
   if (cache[key] && Date.now() - cache[key].timestamp < 50000) {
-    console.log("Cache hit");
+    console.log('Cache hit');
     res.status(200).send(cache[key].data);
   } else {
-    console.log("Cache miss");
+    console.log('Cache miss');
     axios
       .get(movieApi)
       .then((response) => {
         const movies = response.data.results.filter(
           (element) => element.popularity > 8 && element.poster_path
-        );
+        ).then(movies=>movies.map(element=>new MyMovie(element)).slice(0,5));
         cache[key] = {};
         cache[key].timestamp = Date.now();
         cache[key].data = movies;
@@ -44,18 +28,6 @@ async function getMovie(req, res, next) {
       .catch((err) => next(err));
   }
 }
-
-// return cache[key].data;
-
-// axios.get(movieApi)
-//   .then(response => {
-//     const movies = response.data.results.filter(element=>element.popularity > 8&&(element.poster_path));
-//     console.log(movies);
-//     return movies;
-//   })
-//   .then(movies=>movies.map(element=>new MyMovie(element)).slice(0,5))
-//   .then(formatted =>res.status(200).send(formatted))
-//   .catch(err=>next(err));
 
 class MyMovie {
   constructor(movieObj) {

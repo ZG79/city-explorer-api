@@ -20,17 +20,27 @@ function getWeather(req, res, next) {
       res.status(200).send(cache[key].data);
     } else {
       console.log('Cache miss');
-      const formattedData = axios.get(urlApi).then(res => res.data.data.map(element => new MyWeather(element)));
-      // Creating an object to save it in the cache.
-      cache[key].timestamp = Date.now();
-      cache[key].data = formattedData;
-      res.status(200).send(formattedData);
+      axios
+        .get(urlApi)
+        .then(response => {
+          const formattedData = response.data.data.map(element => new MyWeather(element));
+          cache[key] = {
+            timestamp: Date.now(),
+            data: formattedData
+          };
+          res.status(200).send(formattedData);
+        })
+        .catch(err => {
+          console.log(err);
+          next(err);
+        });
     }
   } catch (err) {
     console.log(err);
     next(err);
   }
 }
+
 
 // function getWeather(res, req, next) {
 //   const { lat, lon } = req.query;

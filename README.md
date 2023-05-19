@@ -26,6 +26,7 @@ I will use NodeJS to build this server.
 ## Credit and Collaborations
 
 Jonathan Brooks - lab07, whiteboarding partner.
+Jacob Basset = lab 09, lab10 - whiteboarding partner. 
 
 ## Time Estimates
 
@@ -44,3 +45,5 @@ Actual time needed to complete: 6 hours;
 ### Web Response
 
 ![Web Response Cycle](./web_request_api.png);
+
+![Web Response Cycle](./Lab10.png);

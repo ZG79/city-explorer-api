@@ -5,7 +5,7 @@ let cache = require('./cache');
 
 
 
-function getWeather(res, req, next) {
+function getWeather(req, res, next) {
   const { lat, lon } = req.query;
   const key = 'weather-' + lat + lon;
 
@@ -20,7 +20,7 @@ function getWeather(res, req, next) {
       res.status(200).send(cache[key].data);
     } else {
       console.log('Cache miss');
-      const formattedData = axios.get(urlApi).then(response => response.data.data.map(element => new MyWeather(element)));
+      const formattedData = axios.get(urlApi).then(res => res.data.data.map(element => new MyWeather(element)));
       // Creating an object to save it in the cache.
       cache[key].timestamp = Date.now();
       cache[key].data = formattedData;

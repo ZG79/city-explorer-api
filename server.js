@@ -6,6 +6,19 @@ const cors = require('cors');
 // const weatherData = require("./data.json");
 
 const getWeather = require('./modules/weather');
+
+function weatherHandler(request, response) {
+  const { lat, lon } = request.query;
+  getWeather(lat, lon)
+    .then(summaries => response.status(200).send(summaries))
+    .catch((error) => {
+      console.error(error);
+      response.status(200).send('Sorry. Something went wrong!');
+    });
+}
+
+
+
 const getMovie = require('./modules/movies');
 //initialize express
 const app = express();
@@ -16,7 +29,7 @@ const PORT = process.env.PORT;
 //check if the server is working
 app.get('/', (req, res) => res.status(200).send('Default route is working'));
 
-app.get('/weather', getWeather);
+app.get('/weather', weatherHandler);
 
 // async function getWeather(req, res, next) {
 //   try {
